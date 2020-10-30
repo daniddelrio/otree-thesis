@@ -1,0 +1,26 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block content %}
+
+<div class="well well-lg body">
+  {% include "cartelgame/roundheader.html" %}
+
+  <p>A chat window will be available to you in this round if you and at least one more member of your group decide to chat.</p>
+
+  {% formfield player.accepted_chat label="Would you like to use the chat window to discuss your offer price with members of your group?" %}
+
+  <p>Click on the button labelled <b>CONFIRM</b>.</p>
+
+  <button id="btn-next" class="btn btn-primary">Confirm</button>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timerblink.js" %}
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}Instructions{% endblock %}
+
+{% block content %}
+
+<div class="well well-lg body">
+
+  {% if Constants.part == Constants.PRACTICE %}
+    <p>Please wait for the experiment to continue.</p>
+  {% elif Constants.part == Constants.ACTUAL %}
+    {% if self.session.config.random_detection_only_on_report %}
+      <p>If a participant in your group clicked on the button labelled "{{ session.config.report_action }}" in the previous round, there is a {{ session.config.cartel_detection_rate }} percent chance that the computer may review the past immediate round and may detect the use of the chat window in that previous round.</p>
+    {% else %}
+      <p>In Part 3, there is a {{ session.config.cartel_detection_rate }} percent chance that the computer may detect your use of the chat window. If the computer detects that your group used the chat window, all participants in your group will pay a penalty in the current round.</p>
+    {% endif %}
+  
+    {% if self.session.config.self_report %}
+      <p>The penalty in the current round will be reduced {% if session.config.reduced_cartel_fine_percentage == 100 %}to zero{% else %}by {{ session.config.reduced_cartel_fine_percentage }} percent{% endif %} if you are the first participant in your group to click on the button labelled "{{ session.config.report_action }}".</p>
+    {% endif %}
+  {% endif %}
+  </p>
+  
+  <p>To continue, please click on the button labelled <b>OK</b>.</p>
+  
+  <button id="btn-inst-done" class="btn btn-primary">OK</button>
+
+</div>
+
+{% endblock %}

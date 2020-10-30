@@ -1,0 +1,26 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block content %}
+
+<div class="well well-lg body">
+
+{% if group.will_be_sued %}
+<p>The computer reviewed Round {{ previous_round }} and detected that your group used the chat window in that round. You will pay an additional penalty in this round.</p>
+{% else %}
+<p>The computer reviewed Round {{ previous_round }}. However, it <b>failed</b> to detect that your group used the chat window in that round. You will <b>not</b> pay an additional penalty in this round.</p>
+{% endif %}
+
+{% next_button %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

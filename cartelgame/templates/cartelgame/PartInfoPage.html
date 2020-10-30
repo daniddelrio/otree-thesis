@@ -1,0 +1,26 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}Group Assignments{% endblock %}
+
+{% block content %}
+
+<div class="well well-lg body">
+  {% if Constants.part == Constants.PRACTICE %}
+    <p>The Practice Session will begin shortly. The computer will now randomly group you with three other participants in this room or in the other room. </p>
+  {% elif Constants.part == Constants.ACTUAL %}
+    <p>You are in the Experimental Session.</p>
+
+    <p>The computer has randomly grouped you with three other participants in this room or the other room. The other three participants may be the same as or may be different from the participants you encountered in Part 1.</p>
+
+    <p>You own {{ Constants.per_player_supply }} buttons that are available for sale.</p>
+
+    <p>The Experimental Session may end at any time but will not last for more than 30 minutes. </p>
+
+    <p>To continue, please click on the button labelled NEXT.</p>
+  {% endif %}
+
+  {% next_button %}
+</div>
+
+{% endblock %}

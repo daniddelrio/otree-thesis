@@ -1,0 +1,5 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}You are playing in the <b>{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session</b>, <b>Round {{ player.round_number }}</b>.{% endblock %}
+

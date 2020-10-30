@@ -1,0 +1,25 @@
+{% extends "cartelgame/ReportBasePage.html" %}
+{% load staticfiles otree %}
+
+{% block body %}
+    <div class="well well-lg body">
+        <div style="display: grid; grid-template-columns: 2fr 2fr">
+            <div>
+                {% include "cartelgame/roundheader.html" %}
+                {% formfield player.price label="What is your offer price?" %}
+                {% next_button %}
+            </div>
+            <div>
+                {% include "cartelgame/calculator.html" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timerblink.js" %}
+    });
+</script>
+{% endblock %}

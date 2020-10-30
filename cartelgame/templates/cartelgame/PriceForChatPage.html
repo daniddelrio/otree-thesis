@@ -1,0 +1,44 @@
+{% extends "cartelgame/ReportBasePage.html" %}
+{% load staticfiles otree %}
+
+{% block body %}
+    <div class="well well-lg body">
+        <div style="display: grid; grid-template-columns: 2fr 2fr">
+            <div>
+                {% include "cartelgame/roundheader.html" %}
+                {% formfield player.agree_count %}
+                <div id="common-price" style="display: none;">
+                    {% formfield player.common_price %}
+                </div>
+                {% next_button %}
+            </div>
+            <div>
+                {% include "cartelgame/calculator.html" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timerblink.js" %}
+
+        var div_common_price = $("div#common-price");
+        var select_common_price = $("select#id_common_price");
+        var select_agree_count = $("select#id_agree_count");
+
+        select_agree_count.val("");
+
+        select_agree_count.change(function() {
+            if (select_agree_count.val() == 0) {
+                div_common_price.hide();
+                select_common_price.prop('disabled', true);
+            } else {
+                div_common_price.show();
+                select_common_price.prop('disabled', false);
+            }
+        });
+    });
+</script>
+{% endblock %}

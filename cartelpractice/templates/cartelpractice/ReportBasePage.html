@@ -1,0 +1,59 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}You are in <b>{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session</b>, <b>Round {{ player.round_number }}</b>.{% endblock %}
+
+{% block content %}
+    <script type="text/javascript" src="{% static "channels/js/websocketbridge.js" %}"></script>
+
+    <div class="popover fade left in report-popup" style="top: 10px; left: unset; right: 130px; display: none; position: absolute;">
+        <div class="arrow"></div>
+        </div>
+    </div>
+
+    {% if Constants.part != Constants.PRACTICE and session.config.self_report and player.accepted_chat and group.accepted_chat_count > 1 and not player.report_time %}
+        <button type="button" class="btn btn-danger btn-lg report-button" style="position: absolute; top: 20px; right: 20px;" data-toggle="popover" data-content="Some content inside the popover">{{ session.config.report_action }}</button>
+
+    {% endif %}
+
+    {% block body %}{% endblock %}
+
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="popover"]').popover();
+
+            const ws = new channels.WebSocketBridge();
+            const report_message = $("div.report-message");
+            const report_button = $(".report-button");
+            const report_popup = $(".report-popup");
+
+            var disable_button = function() {
+                report_button.prop("disabled", true);
+                report_button.removeClass("btn-danger");
+                report_button.addClass("btn-default");
+            };
+
+            {% if player.reported %}
+                disable_button();
+            {% endif %}
+
+            ws.connect('/custom/report');
+            ws.listen(function(action, stream) {
+                console.log(action, stream);
+                $(".popover-body").text(action['text']);
+                report_popup.css("display", "block");
+                disable_button();
+            });
+
+            report_button.click(function() {
+                ws.send({
+                    "action": "report",
+                    "pid": "{{ participant.pk }}",
+                    "round_number": "{{ player.round_number }}",
+                    "page": "{{ page_name }}",
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

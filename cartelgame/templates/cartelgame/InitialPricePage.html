@@ -1,0 +1,43 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block content %}
+
+<h3 class="panel-sub-heading">Set Selling Price</h3>
+
+<div class="well well-lg body">
+
+    <p>You are playing <b>{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session</b>.</p>
+
+    <p>You are in <b>Round {{ player.round_number }}</b>.</p>
+
+    <p>You own <b>{{ player.get_supply }}</b> units available for sale.</p>
+
+    <label class="control-label" for="id_initial_price">How much will you sell each unit?</label>
+    {% formfield player.initial_price label="" %}
+    <div class="input-group slider" data-slider="">
+        <input type="range" id="initial-price-fake" value="1" step="1" min="{{ Constants.min_selling_price }}" max="{{ Constants.max_selling_price }}" class="form-control">
+
+        <span class="input-group-addon" data-slider-value="" title="current value">1</span>
+    </div>
+
+    {% next_button %}
+
+</div>
+
+<script>
+    var input_initial_price = $('input[name="initial_price"]');
+    var input_initial_price_fake = $('input#initial-price-fake');
+
+    var f_update_initial_price = function() {
+        var value = input_initial_price_fake.val();
+        input_initial_price.val(value);
+    };
+
+    // Always update hidden fields on subtle form interaction
+    input_initial_price_fake.focus(f_update_initial_price);
+    input_initial_price_fake.change(f_update_initial_price);
+
+</script>
+
+{% endblock %}

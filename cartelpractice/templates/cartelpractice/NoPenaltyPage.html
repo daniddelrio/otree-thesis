@@ -1,0 +1,21 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block content %}
+
+<div class="well well-lg body">
+<p>The computer did not detect that your group used the chat window in this round.</p>
+
+{% next_button %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

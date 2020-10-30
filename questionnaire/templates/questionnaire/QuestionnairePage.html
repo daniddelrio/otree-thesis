@@ -1,0 +1,255 @@
+{% extends "global/Page.html" %}
+
+{% load staticfiles otree %}
+
+{% block title %}Questionnaire{% endblock %}
+
+{% block content %}
+<style>
+.right {
+    color: green;
+}
+</style>
+
+<h3>Question #<span id="span-question">1</span></h3>
+<div class="well well-lg body">
+    {% for field in form %}
+        {% formfield field %}
+        <div class="form-control-errors" id="blank_answer_{{ field.name }}">{{ blank_answer }}<br /><br /></div>
+        <div class="form-control-errors" id="invalid_year_{{ field.name }}">{{ invalid_year }}<br /><br /></div>
+    {% endfor %}
+
+    <button type="button" id="btn-previous" class="btn btn-primary">Previous</button>
+    <button type="button" id="btn-next" class="btn btn-primary">Next</button>
+    <button type="button" id="btn-finish" class="btn btn-success">Finish</button>
+</div>
+
+<button style="display: none;" class="otree-btn-next btn btn-primary">Next</button>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var blank_answers = {};
+    var invalid_years = {};
+
+    {% for field in form %}
+        var div_{{ field.name }} = $(".field-{{ field.name }}");
+        blank_answers["id_{{ field.name }}"] = $("#blank_answer_{{ field.name }}");
+        invalid_years["id_{{ field.name }}"] = $("#invalid_year_{{ field.name }}");
+    {% endfor %}
+
+    var form_divs = [
+        null,
+        {% for field_group in field_groups %}
+            {% if field_group|length == 1 %}
+                [div_{{ field_group.0 }}],
+            {% else %}
+                [
+                    {% for field in field_group %}
+                        div_{{ field }}, 
+                    {% endfor %}
+                ],
+            {% endif %}
+        {% endfor %}
+    ];
+
+    var previous_question = {
+        1: null,
+        2: 1,
+        3: 2,
+        4: 3,
+        5: 4,
+
+        6: 5,
+        7: 5,
+
+        8: 7,
+        9: 7,
+
+        10: 8,
+
+        11: 10,
+        12: 10,
+
+        13: 12,
+    };
+
+    var next_question = {
+        5: {
+            yes: 6,
+            no: 7
+        },
+        7: {
+            yes: 8,
+            no: 9
+        },
+        10: {
+            yes: 11,
+            no: 12
+        }
+    };
+
+    var btn_previous = $("button#btn-previous");
+    var btn_next = $("button#btn-next");
+    var btn_finish = $("button#btn-finish");
+    var span_question = $("span#span-question");
+
+    var raw_frm_questionnaire = document.forms[0];
+    var frm_questionnaire = $(raw_frm_questionnaire);
+    var csrf = $("input[name='csrfmiddlewaretoken']");
+
+    var current_question = 1;
+    var total_questions = form_divs.length - 1;
+
+    var hide_all_invalids = function() {
+        var keys = Object.keys(blank_answers);
+        for (var i = 0; i < keys.length; i++) {
+            blank_answers[keys[i]].hide();
+        }
+
+        keys = Object.keys(blank_answers);
+        for (var i = 0; i < keys.length; i++) {
+            invalid_years[keys[i]].hide();
+        }
+    };
+
+    var show_blank_answer = function(key) {
+        blank_answers[key].show();
+    };
+
+    var show_invalid_year = function(key) {
+        invalid_years[key].show();
+    };
+
+    var hide_all_form_divs = function() {
+        for (var i = 1; i < form_divs.length; i++) {
+            for (var j = 0; j < form_divs[i].length; j++) {
+                form_divs[i][j].parent().hide();
+            }
+        }
+    };
+
+    var show_form_divs = function(i) {
+        for (var j = 0; j < form_divs[i].length; j++) {
+            form_divs[i][j].parent().show();
+        }
+    };
+
+    var validate_visible_form = function() {
+        var valid = true;
+
+        hide_all_invalids();
+
+        var elements = $(":input:visible").not("button").not("[type='radio']");
+
+        for (var i = 0; i < elements.length; i++) {
+            var e = elements[i]
+            var id = e.id;
+            var $e = $(e);
+            var value = $e.val();
+
+            if (!value) {
+                valid = false;
+                show_blank_answer(id);
+            }
+        
+            var min_value = $e.attr("min");
+            var max_value = $e.attr("max");
+
+            if (valid && (min_value || max_value)) {
+                min_value = parseInt(min_value);
+                max_value = parseInt(max_value);
+
+                if (value < min_value || value > max_value) {
+                    valid = false;
+                    show_invalid_year(id);
+                }
+            }
+        }
+
+        $("div.controls:visible").each(function(idx, div) {
+            var id = $($(div).siblings()[0]).attr("for");
+            var radios = $(div).find("input[type='radio']");
+
+            if (radios.length != 0) {
+                var checked = $(div).find("input[type='radio']:checked").length;
+
+                if (checked == 0) {
+                    valid = false;
+                    show_blank_answer(id);
+                }
+            }
+        });
+
+        return valid;
+    }
+
+    var goto_previous_question = function() {
+        goto_question(previous_question[current_question]);
+    }
+
+    var goto_next_question = function() {
+        var conditional = Object.keys(next_question).indexOf(String(current_question));
+
+        if (conditional == -1) {
+            goto_question(current_question + 1);
+        } else {
+            var radios = $("input[type='radio']:visible");
+
+            if (radios[0].checked) {
+                goto_question(next_question[current_question].yes);
+            } else {
+                goto_question(next_question[current_question].no);
+            }
+        }
+    }
+
+    var goto_question = function(q) {
+        if (1 <= q && q <= total_questions) {
+            current_question = q;
+
+            hide_all_form_divs();
+            hide_all_invalids();
+            show_form_divs(current_question);
+            span_question.text(current_question);
+
+            if (current_question == total_questions) {
+                btn_finish.show();
+                btn_next.hide();
+            } else {
+                btn_finish.hide();
+                btn_next.show();
+            }
+            
+            if (current_question == 1) {
+                btn_previous.hide();
+            } else {
+                btn_previous.show();
+            }
+
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
+    };
+
+    btn_previous.click(function() {
+        goto_previous_question();
+    });
+
+    btn_next.click(function() {
+        if (validate_visible_form()) {
+            goto_next_question();
+        }
+    });
+
+    btn_finish.click(function() {
+        if (validate_visible_form()) {
+            frm_questionnaire.submit();
+        }
+    });
+    
+    goto_question(1);
+});
+
+</script>
+
+{% endblock %}

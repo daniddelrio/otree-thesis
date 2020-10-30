@@ -1,0 +1,262 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}Instructions{% endblock %}
+
+{% block content %}
+<style>
+.right {
+    color: green;
+}
+</style>
+
+<div id="div-instructions">
+    <div class="well well-lg body">
+        {% include "quiz/instructions.html" %} 
+        <p>
+            <button type="button" id="btn-inst-done" class="btn btn-primary">Answer quiz</button>
+        </p>
+    </div>
+</div>
+
+<div id="div-quiz" style="display: none;">
+    <h3>Quiz</h3>
+    <div class="well well-lg">
+        <p>Please answer the following questions. You may refer to the printed instructions.</p>
+
+        {% include "quiz/quizform.html" %} 
+        <div class="form-control-errors" id="not-all-right-message" ><b>{{ not_all_right_message }}</b></div>
+        <div class="form-control-errors" id="still-wrong-message" ><b>{{ still_wrong_message }}</b></div>
+        <br />
+
+        <div id="secret-code">
+            <label>For the experimenter:</label><p><input type="password" id="input-password" /></p>
+        </div>
+
+        <p>
+            <button type="button" id="btn-quiz-done" class="btn btn-primary">Submit</button>
+            <button type="button" id="btn-quiz-wrong" class="btn btn-warning">Retry</button>
+            <button id="btn-quiz-correct" class="btn btn-success">Continue</button>
+        </p>
+    </div>
+</div>
+
+<button style="display: none;" class="otree-btn-next btn btn-primary">Next</button>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var div_instructions = $("div#div-instructions");
+    var div_quiz = $("div#div-quiz");
+    var div_not_all_right_message = $("div#not-all-right-message");
+    var div_still_wrong_message = $("div#still-wrong-message");
+    var btn_inst_done = $("button#btn-inst-done");
+    var btn_quiz_done = $("button#btn-quiz-done");
+    var btn_quiz_correct = $("button#btn-quiz-correct");
+    var btn_quiz_wrong = $("button#btn-quiz-wrong");
+    var raw_frm_quiz = document.forms[0];
+    var frm_quiz = $(raw_frm_quiz);
+    var csrf = $("input[name='csrfmiddlewaretoken']");
+    var div_secret_code = $("div#secret-code");
+    var input_password = $("input#input-password");
+
+    var maximum_price_right = $("div#maximum-price-right");
+    var maximum_price_wrong = $("div#maximum-price-wrong");
+    var players_per_group_right = $("div#players-per-group-right");
+    var players_per_group_wrong = $("div#players-per-group-wrong");
+    var consumers_right = $("div#consumers-right");
+    var consumers_wrong = $("div#consumers-wrong");
+    var earnings_right = $("div#earnings-right");
+    var earnings_wrong = $("div#earnings-wrong");
+    var discuss_chat_right = $("div#discuss-chat-right");
+    var discuss_chat_wrong = $("div#discuss-chat-wrong");
+
+    var was_wrong_before = false;
+
+    var disable_form = function() {
+        frm_quiz.find(":input").prop("disabled", true);
+    };
+
+    var enable_form = function() {
+        frm_quiz.find(":input").prop("disabled", false);
+    };
+
+    var all_correct = function() {
+        var answers = frm_quiz.serializeArray();
+        var correct = 0;
+        var total = 5;
+
+        if (check_answer(answers, "maximum_price", {{ Constants.max_buying_price }})) {
+            maximum_price_right.show();
+            correct += 1;
+        } else {
+            maximum_price_wrong.show();
+        }
+
+        if (check_answer(answers, "players_per_group", {{ Constants.players }})) {
+            players_per_group_right.show();
+            correct += 1;
+        } else {
+            players_per_group_wrong.show();
+        }
+
+        if (check_answer(answers, "consumers", {{ Constants.demand_per_round }})) {
+            consumers_right.show();
+            correct += 1;
+        } else {
+            consumers_wrong.show();
+        }
+
+        if (check_answer(answers, "earnings", 3)) {
+            earnings_right.show();
+            correct += 1;
+        } else {
+            earnings_wrong.show();
+        }
+
+        {% if session.config.has_chat %}
+            if (check_answer_multiple(answers, "discuss_chat", ["offer"])) {
+                discuss_chat_right.show();
+                correct += 1;
+            } else {
+                discuss_chat_wrong.show();
+            }
+            {% else %}
+                total -= 1;
+        {% endif %}
+
+        return correct == total;
+    };
+
+    var check_answer = function(answers, key, value) {
+        for (var i = 0; i < answers.length; i++) {
+            var item = answers[i];
+
+            if (item.name == key && item.value == value) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    var check_answer_multiple = function(answers, key, values) {
+        var right = 0;
+        var answer_values = [];
+
+        for (var i = 0; i < answers.length; i++) {
+            var item = answers[i];
+
+            if (item.name == key) {
+                answer_values.push(item.value);
+            }
+        }
+
+        for (var i = 0; i < answer_values.length; i++) {
+            var answer_value = answer_values[i];
+
+            if (values.indexOf(answer_value) == -1) {
+                return false;
+            }
+        }
+
+        for (var i = 0; i < values.length; i++) {
+            var value = values[i];
+
+            if (answer_values.indexOf(value) == -1) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    var hide_messages = function () {
+        maximum_price_right.hide();
+        maximum_price_wrong.hide();
+        players_per_group_right.hide();
+        players_per_group_wrong.hide();
+        consumers_right.hide();
+        consumers_wrong.hide();
+        earnings_right.hide();
+        earnings_wrong.hide();
+        discuss_chat_right.hide();
+        discuss_chat_wrong.hide();
+        div_not_all_right_message.hide();
+        div_still_wrong_message.hide();
+        div_secret_code.hide();
+    };
+
+    var switch_to_quiz = function() {
+        enable_form();
+        hide_messages();
+        raw_frm_quiz.reset();
+
+        btn_quiz_done.show();
+        btn_quiz_correct.hide();
+        btn_quiz_wrong.hide();
+
+        div_instructions.hide();
+        div_quiz.show();
+
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    };
+
+    var switch_to_instructions = function() {
+        btn_inst_done.prop("disabled", false);
+
+        div_quiz.hide();
+        div_instructions.show();
+    };
+
+    btn_inst_done.click(function() {
+        switch_to_quiz();
+    });
+
+    btn_quiz_wrong.click(function() {
+        switch_to_instructions();
+        switch_to_quiz();
+    });
+
+    btn_quiz_done.click(function() {
+        var correct = all_correct();
+        disable_form();
+        btn_quiz_done.hide();
+
+        if (correct) {
+            btn_quiz_correct.show();
+            btn_quiz_correct.prop("disabled", false);
+            csrf.prop("disabled", false);
+            div_not_all_right_message.hide();
+            div_still_wrong_message.hide();
+            div_secret_code.hide();
+        } else {
+            if (was_wrong_before) {
+                div_still_wrong_message.show();
+                div_secret_code.show();
+                input_password.prop('disabled', false);
+            } else {
+                was_wrong_before = true;
+                btn_quiz_wrong.show();
+                btn_quiz_wrong.prop("disabled", false);
+                div_not_all_right_message.show();
+            }
+        }
+    });
+
+    input_password.keyup(function() {
+        var code = input_password.val();
+
+        if (code === "firstinthecountry") {
+            btn_quiz_correct.prop('disabled', false);
+            csrf.prop('disabled', false);
+            btn_quiz_correct.click();
+        }
+    });
+    
+    switch_to_instructions();
+});
+
+</script>
+
+{% endblock %}

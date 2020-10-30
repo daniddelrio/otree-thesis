@@ -1,0 +1,43 @@
+{% extends "cartelgame/ReportBasePage.html" %}
+{% load staticfiles otree %}
+
+{% block body %}
+    <div class="well well-lg body">
+        <div style="display: grid; grid-template-columns: 2fr 2fr">
+            <div>
+                <p><b>Player {{ player.id_in_group }} (you)</b> {% if Constants.part == Constants.PRACTICE %}would have {% endif %}earned <b>{{ player.gross_earnings }}</b> and sold <b>{{ player.units_sold }}</b> trinkets at an offer price of <b>Php{{ player.price }}.00</b>.</p>
+
+                {% for p in player.get_others_in_group %}
+                    <p><b>Player {{ p.id_in_group }}</b> {% if Constants.part == Constants.PRACTICE %}would have {% endif %}earned <b>{{ p.gross_earnings }}</b> and sold <b>{{ p.units_sold }}</b> trinkets at an offer price of <b>Php{{ p.price }}.00</b>.</p>
+                {% endfor %}
+
+                {% next_button %}
+
+                <p>PUBLIC ANNOUNCEMENT: {{ num_caught }} participant/s from other groups have been caught attempting to chat in this round. Please be reminded that if you are caught chatting, you will be severely penalized.</p>
+            </div>
+            <div>
+                {% include "cartelgame/calculator.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+
+<style type="text/css">
+    .center {
+        text-align: center;
+    }
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static "channels/js/websocketbridge.js" %}"></script>
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

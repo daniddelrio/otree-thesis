@@ -1,0 +1,31 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}Group Chat{% endblock %}
+
+{% block content %}
+
+<div class="well well-lg body">
+  {% include "cartelgame/roundheader.html" %}
+
+  {% if group.accepted_chat_count == 0 %}
+    <p><b>No one</b> in your group chose to chat in this round.</p>
+  {% elif group.accepted_chat_count == 1 %}
+    <p><b>Only one</b> member of your group chose to chat in this round.</p>
+  {% else %}
+    <p><b>{{ group.accepted_chat_count }}</b> members of your group chose to chat in this round.</p>
+  {% endif %}
+
+  <p>Please wait for the experiment to continue.</p>
+</div>
+
+<button style="display: none;">Next</button>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

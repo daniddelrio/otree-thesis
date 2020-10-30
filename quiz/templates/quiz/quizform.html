@@ -1,0 +1,72 @@
+<form id="frm-quiz" method="get">
+    <div class="form-group required">
+        
+        <label class="control-label" for="id_maximum_price">What is the maximum price that consumers in this experiment are willing to accept?</label>
+        <div class="controls  field-maximum_price">
+            <select name="maximum_price" required="" id="id_maximum_price" class="form-control">
+                <option value="" selected="selected">---------</option>
+                <option value="10">10</option>
+                <option value="12">12</option>
+                <option value="15">15</option>
+            </select>
+            <div class="right" id="maximum-price-right">{{ right_message }}</div>
+            <div class="form-control-errors" id="maximum-price-wrong">{{ wrong_message }}</div>
+        </div><!--- .controls -->
+    </div><!--- .form-group -->
+
+    <div class="form-group required">
+        <label class="control-label" for="id_players_per_group">How many participants will there be in each group?</label>
+        <div class="controls  field-players_per_group">
+            <select name="players_per_group" required="" id="id_players_per_group" class="form-control">
+                <option value="" selected="selected">---------</option>
+                <option value="1">1</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            <div class="right" id="players-per-group-right">{{ right_message }}</div>
+            <div class="form-control-errors" id="players-per-group-wrong">{{ wrong_message }}</div>
+        </div><!--- .controls -->
+    </div><!--- .form-group -->
+
+    <div class="form-group required">
+        <label class="control-label" for="id_consumers">How many consumers are there in this experiment?</label>
+        <div class="controls  field-consumers">
+            <select name="consumers" required="" id="id_consumers" class="form-control">
+                <option value="" selected="selected">---------</option>
+                <option value="4">4</option>
+                <option value="120">120</option>
+                <option value="200">200</option>
+            </select>
+            <div class="right" id="consumers-right">{{ right_message }}</div>
+            <div class="form-control-errors" id="consumers-wrong">{{ wrong_message }}</div>
+        </div><!--- .controls -->
+    </div><!--- .form-group -->
+
+    <div class="form-group required">
+        <label class="control-label" for="id_earnings">How much will your earnings be at the end of the experiment?</label>
+        <div class="controls  field-earnings">
+            <select name="earnings" required="" id="id_earnings" class="form-control">
+                <option value="" selected="selected">---------</option>
+                <option value="1">Total of Part 1 and Part 2, plus Php 100</option>
+                <option value="2">Total earnings in Part 2, plus Php 100</option>
+                <option value="3">Average earnings in Part 2, plus Php 100</option>
+            </select>
+            <div class="right" id="earnings-right">{{ right_message }}</div>
+            <div class="form-control-errors" id="earnings-wrong">{{ wrong_message }}</div>
+        </div><!--- .controls -->
+    </div><!--- .form-group -->
+
+    {% if session.config.has_chat %}
+        <div class="form-group required">
+            <label class="control-label" for="id_discuss_chat_0">What can you discuss in the chat window? Tick all that apply.</label>
+            <div class="controls  field-discuss_chat">
+                <ul id="id_discuss_chat">
+                    <li><label for="id_discuss_chat_1"><input id="id_discuss_chat_1" name="discuss_chat" type="checkbox" value="offer"> Your offer price</label></li>
+                    <li><label for="id_discuss_chat_2"><input id="id_discuss_chat_2" name="discuss_chat" type="checkbox" value="personal"> Your personal details</label></li>
+                    <li><label for="id_discuss_chat_3"><input id="id_discuss_chat_3" name="discuss_chat" type="checkbox" value="location"> Your location in this laboratory</label></li></ul>
+                <div class="right" id="discuss-chat-right">{{ right_message }}</div>
+                <div class="form-control-errors" id="discuss-chat-wrong">{{ wrong_message }}</div>
+            </div><!--- .controls -->
+        </div><!--- .form-group.error -->
+    {% endif %}
+</form>
