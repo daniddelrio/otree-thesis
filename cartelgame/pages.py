@@ -212,10 +212,12 @@ class GrossEarningsPage(Page):
 
     def vars_for_template(self):
         num_caught = NUM_CAUGHT[self.round_number]
+        has_announcement = self.session.config['has_announcement']
         
         return {
             'page_name': self.page_name,
             'num_caught': num_caught,
+            'has_announcement': has_announcement,
         }
 
 

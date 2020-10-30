@@ -177,14 +177,14 @@ SESSION_CONFIGS = [
     },
     {
         'name': 'pcc_aa_no_leniency_reputation',
-        'display_name': 'Cartel Game - AA with Leniency and Reputation',
+        'display_name': 'Cartel Game - AA without Leniency and with Reputation',
         'num_demo_participants': NUM_DEMO_PARTICIPANTS,
         'app_sequence': APP_SEQUENCE,
-        'treatment': 'aa_no_leniency',
+        'treatment': 'aa_no_leniency_reputation',
 
         'report_action': "Report",
-        'has_chat': False,
-        'self_report': True,
+        'has_chat': True,
+        'self_report': False,
         'has_random_detection': True,
         'has_previous_round_detection': False,
         'has_announcement': True,
@@ -194,11 +194,11 @@ SESSION_CONFIGS = [
         'criminal_case_chance': 0,
     },
     {
-        'name': 'pcc_aa_leniency',
-        'display_name': 'Cartel Game - AA with Leniency',
+        'name': 'pcc_aa_leniency_reputation',
+        'display_name': 'Cartel Game - AA with Leniency and Reputation',
         'num_demo_participants': NUM_DEMO_PARTICIPANTS,
         'app_sequence': APP_SEQUENCE,
-        'treatment': 'aa_leniency',
+        'treatment': 'aa_leniency_reputation',
 
         'report_action': "Report",
         'has_chat': True,

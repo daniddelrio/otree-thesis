@@ -13,7 +13,7 @@
 
                 {% next_button %}
                 
-                <p>PUBLIC ANNOUNCEMENT: {{ num_caught }} participant/s from other groups have been caught attempting to chat in this round. Please be reminded that if you are caught chatting, you will be severely penalized.</p>
+                {% if has_announcement %}<p>PUBLIC ANNOUNCEMENT: {{ num_caught }} participant/s from other groups have been caught attempting to chat in this round. Please be reminded that if you are caught chatting, you will be severely penalized.</p>{% endif %}
             </div>
             <div>
                 {% include "cartelgame/calculator.html" %}
