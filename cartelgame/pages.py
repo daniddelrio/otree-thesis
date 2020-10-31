@@ -198,6 +198,7 @@ class GrossEarningsWaitPage(WaitPage):
     def after_all_players_arrive(self):
         self.group.update_units_sold()
         self.group.update_gross_earnings()
+        self.group.get_reputation_num()
 
     def is_displayed(self):
         return is_valid_round(self)

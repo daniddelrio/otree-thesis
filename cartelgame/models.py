@@ -120,9 +120,14 @@ class Group(BaseGroup):
     is_reported = models.BooleanField()
     will_be_detected = models.BooleanField()
     will_be_sued = models.BooleanField()
+    reputation_num = models.IntegerField()
 
     def accepted_chat(self):
         return self.accepted_chat_count >= Constants.minimum_players_per_chat
+
+    def get_reputation_num(self):
+        if self.session.config['has_announcement']:
+            self.reputation_num = NUM_CAUGHT[self.round_number]
 
     def get_previous_group(self):
         return self.in_round(self.round_number - 1) if self.round_number != 1 else None
@@ -332,3 +337,9 @@ class Player(BasePlayer):
     def sync_payoff(self):
         average = self.get_average_earnings()
         self.payoff = average
+
+def custom_export(players):
+    # header row
+    yield ['session', 'participant_code', 'round_number', 'id_in_group', 'payoff', 'test']
+    for p in players:
+        yield [p.session.code, p.participant.code, p.round_number, p.id_in_group, p.payoff, p.payoff]
