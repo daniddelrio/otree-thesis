@@ -1,7 +1,7 @@
 {% extends "cartelgame/BasePage.html" %}
 {% load staticfiles otree %}
 
-{% block title %}You are in <b>{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session</b>, <b>Round {{ player.round_number }}</b>.{% endblock %}
+{% block title %}{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session, Round {{ player.round_number }}{% endblock %}
 
 {% block content %}
     <script type="text/javascript" src="{% static "channels/js/websocketbridge.js" %}"></script>

@@ -113,6 +113,11 @@ class Subsession(BaseSubsession):
 
     def get_treatment(self):
         return self.session.config['treatment']
+    
+    def vars_for_admin_report(self):
+        players = self.get_players()
+        max_payoff = max([p.payoff for p in players])
+        return dict(players=players, max_payoff=max_payoff)
 
 
 class Group(BaseGroup):
@@ -326,9 +331,9 @@ class Player(BasePlayer):
     def get_total_earnings(self):
         return sum(self.get_net_earnings_per_round())
 
-    def get_average_earnings(self):
-        return self.get_total_earnings() / self.subsession.last_round
+    def get_average_earnings_per_round(self):
+        return self.get_total_earnings() / self.round_number
 
     def sync_payoff(self):
-        average = self.get_average_earnings()
+        average = self.get_average_earnings_per_round()
         self.payoff = average

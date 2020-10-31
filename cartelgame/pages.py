@@ -276,6 +276,9 @@ class NetEarningsPage(Page):
 
     def is_displayed(self):
         return Constants.part != Constants.PRACTICE and is_valid_round(self) and self.session.config['has_chat']
+    
+    def before_next_page(self):
+        self.player.sync_payoff()
 
     def vars_for_template(self):
         return {
