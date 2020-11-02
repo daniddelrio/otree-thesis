@@ -186,7 +186,7 @@ class OfferPricePage(PricePage):
 
     def vars_for_template(self):
         return {
-            "seconds_before_flagging": Constants.seconds_before_flagging,
+            "seconds_before_flagging": Constants.offer_timeout,
             'page_name': self.page_name,
         }
 
