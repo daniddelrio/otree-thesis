@@ -1,0 +1,21 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}Start of {% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session{% endblock %}
+
+{% block content %}
+
+<div class="well well-lg body">
+  <h3>Please read the instructions and click the <b>Next</b> button when you are done.</h3>
+</div>
+
+<button>Next</button>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session{% endblock %}
+
+{% block content %}
+
+<div class="well well-lg body">
+  <p><b>{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session</b> will begin shortly.</p>
+
+  <p>The computer will now randomly group you with three other participants in this room or in the other room. </p>
+</div>
+
+<button style="display: none;">Next</button>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

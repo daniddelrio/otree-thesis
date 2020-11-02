@@ -179,7 +179,8 @@ class OfferPricePage(PricePage):
     form_model = 'player'
     form_fields = ['price']
     page_name = "OfferPricePage"
-
+    live_method = 'live_report'
+    
     def is_displayed(self):
         return is_valid_round(self)
 
@@ -198,6 +199,7 @@ class GrossEarningsWaitPage(WaitPage):
     def after_all_players_arrive(self):
         self.group.update_units_sold()
         self.group.update_gross_earnings()
+        self.group.get_reputation_num()
 
     def is_displayed(self):
         return is_valid_round(self)
@@ -275,6 +277,9 @@ class NetEarningsPage(Page):
 
     def is_displayed(self):
         return Constants.part != Constants.PRACTICE and is_valid_round(self) and self.session.config['has_chat']
+    
+    def before_next_page(self):
+        self.player.sync_payoff()
 
     def vars_for_template(self):
         return {

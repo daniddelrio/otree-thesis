@@ -1,0 +1,29 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}Group Chat{% endblock %}
+
+{% block content %}
+    <div class="well well-lg body">
+        <div style="display: grid; grid-template-columns: 2fr 2fr">
+            <div>
+                <p>The following participants are using the chat window: {{ chat_players }}</p>
+                {% include "cartelgame/roundheader.html" %}
+                {% chat %}
+            </div>
+            <div>
+                {% include "cartelgame/calculator.html" %}
+            </div>
+        </div>
+    </div>
+
+    <button style="display: none;">Next</button>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

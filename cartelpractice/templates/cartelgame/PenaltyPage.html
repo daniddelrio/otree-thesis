@@ -1,0 +1,32 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block content %}
+
+<div class="well well-lg body">
+
+{% if player.first_to_report %}
+    <p>Thanks to your report, the computer detected the use of the chat window. Your penalty is reduced by <b>{{ session.config.reduced_chat_penalty_percentage }}%</b> ({{ player.penalty }}).</p>
+{% elif player.reported %}
+    <p>Someone else reported faster than you did! No reduction of penalty is applied for you; <b>{{ session.config.chat_penalty_percentage }}%</b> of your profit has been taken away as your penalty ({{ player.penalty }})</p>
+{% elif player.accepted_chat and group.is_reported %}
+    <p>Someone reported the use of the chat window! <b>{{ session.config.chat_penalty_percentage }}%</b> of your profit has been taken away as your penalty ({{ player.penalty }}).</p>
+{% elif player.accepted_chat and group.will_be_detected %}
+    <p>The computer caught you! <b>{{ session.config.chat_penalty_percentage }}%</b> of your profit has been taken away as your penalty ({{ player.penalty }}).</p>
+{% else %}
+    <p>...</p>
+{% endif %}
+
+{% next_button %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

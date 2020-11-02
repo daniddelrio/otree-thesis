@@ -1,0 +1,32 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block title %}Instructions{% endblock %}
+
+{% block content %}
+
+<div class="well well-lg body">
+
+  <p>You are in the <b>{% if Constants.part == 1 %}Practice{% else %}Experimental{% endif %} Session</b>. You are now grouped with <b>two other participants</b> in this room.</p>
+  	
+  <p>Since <b>you{% if not player.top_scorer %} do not{% endif %} have the highest total score</b> within your group, you own <b>{% if not player.top_scorer %}20{% else %}40{% endif %} units</b> in Part {{ Constants.part }}.</p>
+  
+  {% if Constants.part == 3 %}
+    <p>The other two players may be the <b>same as</b> or may be <b>different from</b> the players you encountered in Part 2.</p>
+  {% endif %}
+  
+  <p>
+    {% if Constants.part == 2 %}
+      You will now play <b>5 sample rounds</b>.
+    {% elif Constants.part == 3 %}
+      <b>Part 3 may end at any time</b> but will not last for more than 30 minutes.
+    {% endif %}
+  </p>
+  
+  <p>To continue, please click on the button labelled <b>OK</b>.</p>
+  
+  <button id="btn-inst-done" class="btn btn-primary">OK</button>
+
+</div>
+
+{% endblock %}

@@ -2,7 +2,7 @@ import json
 import time
 
 from django.http import HttpResponse
-# from channels.handler import AsgiHandler
+from channels.handler import AsgiHandler
 
 from otree.models import Participant, Session
 from .models import Player
