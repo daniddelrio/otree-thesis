@@ -1,0 +1,56 @@
+{% extends "cartelgame/BasePage.html" %}
+{% load staticfiles otree %}
+
+{% block content %}
+    <div class="well well-lg body">
+        <p>You may see your rank with respect to the other players in your group below.</p>
+        <div style="display: grid; grid-template-columns: 2fr 2fr">
+            <div>
+                <table class="table">
+                    <tr>
+                        <th>#</th>
+                        <th>Participants</th>
+                    </tr>
+                    {% for p in sorted_players %}
+                    <tr>
+                        {% if p == player %}
+                            <th>{{ forloop.counter }}</th>
+                            <th>Player {{ p.id_in_group }} (you)</th>
+                        {% else %}
+                            <td>{{ forloop.counter }}</td>
+                            <td>Player {{ p.id_in_group }}</td>
+                        {% endif %}
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <br />
+
+                {% next_button %}
+            </div>
+            <div>
+                {% include "cartelgame/calculator.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+
+<style type="text/css">
+    .center {
+        text-align: center;
+    }
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static "channels/js/websocketbridge.js" %}"></script>
+<script>
+    $(document).ready(function() {
+        {% include "cartelgame/timernext.js" %}
+    });
+</script>
+{% endblock %}

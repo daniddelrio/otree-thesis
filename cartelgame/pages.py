@@ -282,6 +282,26 @@ class NetEarningsPage(Page):
             'page_name': self.page_name,
         }
 
+class RankingsWaitPage(WaitPage):
+    def is_displayed(self):
+        return is_valid_round(self)
+
+
+class RankingsPage(Page):
+    timeout_seconds = 30
+    page_name = "RankingsPage"
+
+    def is_displayed(self):
+        return is_valid_round(self)
+
+    def vars_for_template(self):
+        sorted_players = sorted(self.group.get_players(), key=lambda p: p.payoff)
+        
+        return {
+            'page_name': self.page_name,
+            'sorted_players': sorted_players
+        }
+
 
 class OverallResultsPage(Page):
     timeout_seconds = 60
@@ -341,6 +361,8 @@ page_sequence = [
     AdditionalPenaltyPage,
     NetEarningsWaitPage,
     NetEarningsPage,
+    RankingsWaitPage,
+    RankingsPage,
     OverallResultsPage,
     WaitForAllToFinishWaitPage,
     WaitForNextPartPage,
