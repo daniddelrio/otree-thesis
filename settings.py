@@ -98,6 +98,9 @@ SESSION_CONFIG_DEFAULTS = {
     'mturk_hit_settings': mturk_hit_settings,
 }
 
+# EXTENSION_APPS = ['cartelgame']
+# ASGI_APPLICATION = 'otree.channels.routing'
+
 APP_SEQUENCE = ['cartelgame']
 APP_SEQUENCE_PRACTICE = ['cartelpractice']
 NUM_DEMO_PARTICIPANTS = 4
@@ -213,7 +216,7 @@ SESSION_CONFIGS = [
     },
 ]
 
-CHANNEL_ROUTING = 'routing.channel_routing'
+CHANNEL_ROUTING = 'routing.websocket_routes'
 
 # anything you put after the below line will override
 # oTree's default settings. Use with caution.

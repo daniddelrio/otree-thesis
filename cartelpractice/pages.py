@@ -179,8 +179,8 @@ class OfferPricePage(PricePage):
     form_model = 'player'
     form_fields = ['price']
     page_name = "OfferPricePage"
-    timeout_seconds = 60
-
+    live_method = 'live_report'
+    
     def is_displayed(self):
         return is_valid_round(self)
 
@@ -190,12 +190,12 @@ class OfferPricePage(PricePage):
             'page_name': self.page_name,
         }
 
-
 class GrossEarningsWaitPage(WaitPage):
 
     def after_all_players_arrive(self):
         self.group.update_units_sold()
         self.group.update_gross_earnings()
+        self.group.get_reputation_num()
 
     def is_displayed(self):
         return is_valid_round(self)
@@ -210,10 +210,12 @@ class GrossEarningsPage(Page):
 
     def vars_for_template(self):
         num_caught = NUM_CAUGHT[self.round_number]
+        has_announcement = self.session.config['has_announcement']
         
         return {
             'page_name': self.page_name,
             'num_caught': num_caught,
+            'has_announcement': has_announcement,
         }
 
 
@@ -262,7 +264,7 @@ class NetEarningsWaitPage(WaitPage):
         self.group.update_net_earnings()
 
     def is_displayed(self):
-        return is_valid_round(self)
+        return Constants.part != Constants.PRACTICE and is_valid_round(self)
 
 
 class NetEarningsPage(Page):
@@ -271,7 +273,7 @@ class NetEarningsPage(Page):
 
     def is_displayed(self):
         return is_valid_round(self) and self.session.config['has_chat']
-
+    
     def before_next_page(self):
         self.player.sync_payoff()
 
@@ -288,7 +290,7 @@ class OverallResultsPage(Page):
         self.player.sync_payoff()
 
     def is_displayed(self):
-        return Constants.part != Constants.PRACTICE and self.round_number == self.subsession.last_round
+        return self.round_number == self.subsession.last_round
 
     def vars_for_template(self):
         return {
