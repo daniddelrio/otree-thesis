@@ -368,9 +368,6 @@ class Player(BasePlayer):
     def get_average_earnings_per_round(self):
         return self.get_total_earnings() / self.round_number
 
-    def get_average_earnings(self):
-        return self.get_total_earnings() / self.round_number
-
     def sync_payoff(self):
         average = self.get_average_earnings_per_round()
         self.payoff = average

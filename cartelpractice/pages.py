@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import random
 import time
 
@@ -189,10 +190,6 @@ class OfferPricePage(PricePage):
             "seconds_before_flagging": Constants.seconds_before_flagging,
             'page_name': self.page_name,
         }
-    
-    def get_timeout_seconds(self):
-        return 60
-
 
 class GrossEarningsWaitPage(WaitPage):
 
@@ -276,7 +273,7 @@ class NetEarningsPage(Page):
     page_name = "NetEarningsPage"
 
     def is_displayed(self):
-        return Constants.part != Constants.PRACTICE and is_valid_round(self) and self.session.config['has_chat']
+        return is_valid_round(self) and self.session.config['has_chat']
     
     def before_next_page(self):
         self.player.sync_payoff()
@@ -294,7 +291,7 @@ class OverallResultsPage(Page):
         self.player.sync_payoff()
 
     def is_displayed(self):
-        return Constants.part != Constants.PRACTICE and self.round_number == self.subsession.last_round
+        return self.round_number == self.subsession.last_round
 
     def vars_for_template(self):
         return {
