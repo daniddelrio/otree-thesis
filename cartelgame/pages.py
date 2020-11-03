@@ -179,7 +179,8 @@ class OfferPricePage(PricePage):
     form_model = 'player'
     form_fields = ['price']
     page_name = "OfferPricePage"
-
+    live_method = 'live_report'
+    
     def is_displayed(self):
         return is_valid_round(self)
 

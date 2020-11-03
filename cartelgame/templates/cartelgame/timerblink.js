@@ -1,6 +1,6 @@
         //var div_timer = $("div.otree-timer");
-        var div_timer = $('<div class="otree-timer alert alert-warning" style="display: block;"><p><span style="font-weight: bold"><span class="glyphicon glyphicon-time"></span>&nbsp;<span class="otree-timer__time-left">0:<span id="timer-seconds">{{ seconds_before_flagging }}</span></span></span></p></div>');
-        $("form").parent().prepend(div_timer);
+        var div_timer = $('<div class="otree-timer alert alert-warning" style="display: block; margin-right: 2rem;"><p><span style="font-weight: bold"><span class="glyphicon glyphicon-time"></span>&nbsp;<span class="otree-timer__time-left">0:<span id="timer-seconds">{{ seconds_before_flagging }}</span></span></span></p></div>');
+        $("form").parent().eq(0).prepend(div_timer);
 
         var span_timer = div_timer.find("p").children("span");
         var span_timeleft = $(".otree-timer__time-left");

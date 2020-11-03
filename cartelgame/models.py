@@ -281,6 +281,35 @@ class Player(BasePlayer):
     report_page = models.StringField(blank=True, default=None, max_length=30)
     first_to_report = models.BooleanField(blank=True, default=None)
 
+    def live_report(self, data):
+
+        # d = dict(data)
+
+        # body = json.loads(d['text'])
+        body = data
+        round_number = body['round_number']
+        action = body['action']
+        page = body['page']
+        pid = int(body['pid'])
+        print(data)
+        if action == "report":
+            seconds = int(time.time())
+
+            self.update_report_vars(seconds, page)
+
+            #if player.first_to_report:
+            #    text = "In this round, you are THE FIRST PLAYER in your group to click on the REPORT button."
+            #else:
+            #    text = "In this round, you are NOT THE FIRST PLAYER in your group to click on the REPORT button."
+            text = "You have reported the use of the chat window."
+
+            # reply(message, {
+            #     "text": text,
+            # })
+
+            print("Received a report", data)
+            return {self.id_in_group: {"text" : text, }}
+
     def get_previous_self(self):
         return self.in_round(self.round_number - 1) if self.round_number != 1 else None
 
