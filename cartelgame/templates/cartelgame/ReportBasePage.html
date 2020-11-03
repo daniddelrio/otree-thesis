@@ -11,7 +11,7 @@
     </div>
 
     {% if Constants.part != Constants.PRACTICE and session.config.self_report and player.accepted_chat and group.accepted_chat_count > 1 and not player.report_time and page_name == 'OfferPricePage' %}
-        <button type="button" class="btn btn-danger btn-lg report-button" style="position: absolute; top: 20px; right: 20px;" data-toggle="popover" data-content="Some content inside the popover">{{ session.config.report_action }}</button>
+        <button type="button" class="btn btn-danger btn-lg report-button" style="position: absolute; top: 100px; right: 30px;" data-toggle="popover" data-content="Some content inside the popover">{{ session.config.report_action }}</button>
 
     {% endif %}
 
