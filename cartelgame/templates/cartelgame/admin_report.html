@@ -4,16 +4,16 @@
 
 <table class="table">
     <tr>
-        <th>Participant</th>
+        <th>Participant Code</th>
         <th>Average Payoff by End of Round {{ subsession.round_number }}</th>
     </tr>
     {% for player in players %}
         <tr>
             <td>
                 {% if player.payoff == max_payoff %}
-                    <b>Participant {{ player.id_in_subsession }}</b>
+                    <b>{{ player.participant.code }}</b>
                 {% else %}
-                    Participant {{ player.id_in_subsession }}
+                    {{ player.participant.code }}
                 {% endif %}
             </td>
             <td>

@@ -180,15 +180,16 @@ class OfferPricePage(PricePage):
     form_fields = ['price']
     page_name = "OfferPricePage"
     live_method = 'live_report'
-    
+
     def is_displayed(self):
         return is_valid_round(self)
 
     def vars_for_template(self):
         return {
-            "seconds_before_flagging": Constants.seconds_before_flagging,
+            "seconds_before_flagging": Constants.offer_timeout,
             'page_name': self.page_name,
         }
+
 
 class GrossEarningsWaitPage(WaitPage):
 
@@ -264,7 +265,7 @@ class NetEarningsWaitPage(WaitPage):
         self.group.update_net_earnings()
 
     def is_displayed(self):
-        return Constants.part != Constants.PRACTICE and is_valid_round(self)
+        return is_valid_round(self)
 
 
 class NetEarningsPage(Page):
@@ -273,7 +274,7 @@ class NetEarningsPage(Page):
 
     def is_displayed(self):
         return is_valid_round(self) and self.session.config['has_chat']
-    
+
     def before_next_page(self):
         self.player.sync_payoff()
 
@@ -282,6 +283,25 @@ class NetEarningsPage(Page):
             'page_name': self.page_name,
         }
 
+class RankingsWaitPage(WaitPage):
+    def is_displayed(self):
+        return is_valid_round(self)
+
+
+class RankingsPage(Page):
+    timeout_seconds = 30
+    page_name = "RankingsPage"
+
+    def is_displayed(self):
+        return is_valid_round(self)
+
+    def vars_for_template(self):
+        sorted_players = sorted(self.group.get_players(), key=lambda p: p.payoff)
+        
+        return {
+            'page_name': self.page_name,
+            'sorted_players': sorted_players
+        }
 
 class OverallResultsPage(Page):
     timeout_seconds = 60
@@ -290,7 +310,7 @@ class OverallResultsPage(Page):
         self.player.sync_payoff()
 
     def is_displayed(self):
-        return self.round_number == self.subsession.last_round
+        return Constants.part != Constants.PRACTICE and self.round_number == self.subsession.last_round
 
     def vars_for_template(self):
         return {
@@ -341,6 +361,8 @@ page_sequence = [
     AdditionalPenaltyPage,
     NetEarningsWaitPage,
     NetEarningsPage,
+    RankingsWaitPage,
+    RankingsPage,
     OverallResultsPage,
     WaitForAllToFinishWaitPage,
     WaitForNextPartPage,
