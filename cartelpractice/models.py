@@ -32,7 +32,7 @@ class Constants(BaseConstants):
 
     per_player_supply = 50
     demand_per_round = 120
-    last_round_choices = (3,)
+    last_round_choices = (2,)
     # last_round_choices = (8, 9, 10, 11, 12)
 
     min_selling_price = 1
@@ -41,8 +41,8 @@ class Constants(BaseConstants):
 
     minimum_players_for_chat = 2
 
-    default_timeout = 15
-    chat_duration = 90
+    default_timeout = 10
+    chat_duration = 60
     grouping_info_page_timeout = 10
     chat_results_page_timeout = 10
     seconds_before_flagging = 10

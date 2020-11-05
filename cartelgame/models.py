@@ -41,8 +41,8 @@ class Constants(BaseConstants):
 
     minimum_players_for_chat = 2
 
-    default_timeout = 15
-    chat_duration = 90
+    default_timeout = 10
+    chat_duration = 60
     grouping_info_page_timeout = 10
     chat_results_page_timeout = 10
     seconds_before_flagging = 10

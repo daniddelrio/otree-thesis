@@ -237,4 +237,4 @@ ROOMS = [
     },
 ]
 
-DEBUG = 0
+# DEBUG = 0

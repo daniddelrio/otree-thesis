@@ -203,7 +203,7 @@ class GrossEarningsWaitPage(WaitPage):
 
 
 class GrossEarningsPage(Page):
-    timeout_seconds = 45
+    timeout_seconds = 10
     page_name = "GrossEarningsPage"
 
     def is_displayed(self):
@@ -269,7 +269,7 @@ class NetEarningsWaitPage(WaitPage):
 
 
 class NetEarningsPage(Page):
-    timeout_seconds = 60
+    timeout_seconds = 10
     page_name = "NetEarningsPage"
 
     def is_displayed(self):
@@ -289,14 +289,14 @@ class RankingsWaitPage(WaitPage):
 
 
 class RankingsPage(Page):
-    timeout_seconds = 30
+    timeout_seconds = 10
     page_name = "RankingsPage"
 
     def is_displayed(self):
         return is_valid_round(self)
 
     def vars_for_template(self):
-        sorted_players = sorted(self.group.get_players(), key=lambda p: p.payoff)
+        sorted_players = sorted(self.group.get_players(), key=lambda p: p.payoff, reverse=True)
         
         return {
             'page_name': self.page_name,
