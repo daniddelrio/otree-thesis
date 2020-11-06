@@ -9,7 +9,7 @@
                     <tr>
                         <th></th>
                         <th>Gross earnings</th>
-                        {% if session.config.self_report %}
+                        {% if session.config.self_report or session.config.has_random_detection %}
                             <th>Penalty</th>
                         {% endif %}
                         {% if session.config.has_previous_round_detection %}
@@ -21,7 +21,7 @@
                     <tr>
                         <th>Player {{ p.id_in_group }} {% if p == player %}(you){% endif %}</th>
                         <td>{{ p.gross_earnings }}</td>
-                        {% if session.config.self_report %}
+                        {% if session.config.self_report or session.config.has_random_detection %}
                             <td>{{ p.penalty }}</td>
                         {% endif %}
                         {% if session.config.has_previous_round_detection %}
