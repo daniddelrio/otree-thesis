@@ -5,22 +5,10 @@
 
 {% block content %}
 
-<h3 class="panel-sub-heading">Overall Results</h3>
 
 <div class="well well-lg body">
-
 <p>
-{% for e in player.get_net_earnings_per_round %}
-    Your earnings in Round {{ forloop.counter }}: <b>{{ e }}</b> <br />
-{% endfor %}
-
-<br />
-Average earnings in the Experimental Session: <b>{{ player.get_average_earnings }}</b> <br />
-Show-up fee: <b>Php 100</b> <br />
-<br />
-You will receive <b>{{ total }}</b> before you leave. <br />
-<br />
-To collect your earnings, please fill in the receipt form on your desk. <br />
+Please wait for further instructions. <br />
 </p>
 
 {% next_button %}

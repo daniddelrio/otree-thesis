@@ -10,19 +10,48 @@
         </div>
     </div>
 
-    {% if Constants.part != Constants.PRACTICE and session.config.self_report and player.accepted_chat and group.accepted_chat_count > 1 and not player.report_time %}
-        <button type="button" class="btn btn-danger btn-lg report-button" style="position: absolute; top: 50px; right: 50px;" data-toggle="popover" data-content="Some content inside the popover">{{ session.config.report_action }}</button>
+    {% if Constants.part != Constants.PRACTICE and session.config.self_report and player.accepted_chat and group.accepted_chat_count > 1 and not player.report_time and page_name == 'OfferPricePage' %}
+        <button type="button" class="btn btn-danger btn-lg report-button" style="position: absolute; top: 100px; right: 30px;" data-toggle="popover" data-content="Attempting to Report">{{ session.config.report_action }}</button>
 
     {% endif %}
 
     {% block body %}{% endblock %}
 
-    <script>
-        $(document).ready(function() {
-            $('[data-toggle="popover"]').popover();
+    <script>    
 
+    // function liveRecv(data) {
+    //     console.log(data)
+    //     $(".popover-body").text(data['text']);
+    //     report_popup.css("display", "block");
+    //     disable_button();
+    // };
+
+    // window.addEventListener('DOMContentLoaded', (event) => {
+    // // your code goes here...
+    //     let reportbutton = document.getElementById('reportbutton');
+
+
+        
+
+    //     reportbutton.onclick = function () {
+    //         console.log("TEST");
+
+
+    // // your code goes here...
+    //         console.log('Live Sending');
+    //         liveSend(15);
+          
+            
+    //      };
+    // });
+        
+        function liveRecv() {};
+
+        $(document).ready(function() {
+            console.log("Finished loading");
+            $('[data-toggle="popover"]').popover();
             // const ws = new channels.WebSocketBridge();
-            const report_message = $("div.report-message");
+            // const report_message = $("div.report-message");
             const report_button = $(".report-button");
             const report_popup = $(".report-popup");
 
@@ -37,12 +66,7 @@
             {% endif %}
 
             // ws.connect('/custom/report');
-            function liveRecv(data) {
-                console.log(data)
-                $(".popover-body").text(action['text']);
-                report_popup.css("display", "block");
-                disable_button();
-            }
+            
 
             // ws.listen(function(action, stream) {
             //     console.log(action, stream);
@@ -51,15 +75,34 @@
             //     disable_button();
             // });
 
+            
             report_button.click(function() {
-                liveSend({
-                    "action": "report",
-                    "pid": "{{ participant.pk }}",
-                    "round_number": "{{ player.round_number }}",
-                    "page": "{{ page_name }}",
+
+                $(document).ready(function() {
+                    console.log("Test");
+                    liveSend({
+                        "action": "report",
+                        "pid": "{{ participant.pk }}",
+                        "round_number": "{{ player.round_number }}",
+                        "page": "{{ page_name }}",
+                    });
+
                 });
+                
             });
+
+
+            liveRecv = function(data) {
+                console.log(data);
+                console.log(data['text']);
+                $(".popover-body").text(data['text']);
+                report_popup.css("display", "block");
+                disable_button();
+            };
         });
+
+
+
     </script>
 
 {% endblock %}
