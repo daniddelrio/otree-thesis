@@ -33,7 +33,7 @@ class Constants(BaseConstants):
     per_player_supply = 50
     demand_per_round = 120
     #last_round_choices = (5,)
-    last_round_choices = (8, 9, 10, 11, 12)
+    last_round_choices = (12, 13, 14,)
 
     min_selling_price = 1
     max_selling_price = 12
